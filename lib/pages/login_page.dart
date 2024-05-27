@@ -1,9 +1,11 @@
-import 'package:visualisasiSaham/api_service.dart';
 import 'package:flutter/material.dart';
-import '../database_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences package
+import '../controller/api_service.dart';
+import '../controller/database_helper.dart';
+import '../controller/session_manager.dart';
+import 'stock_screen.dart';
 import 'register_page.dart';
 import 'show_registered_users.dart';
-import '../stock_screen.dart';
 
 class LoginPage extends StatefulWidget {
   final ApiService api;
@@ -18,23 +20,25 @@ class _LoginPageState extends State<LoginPage> {
   final dbHelper = DatabaseHelper();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final SessionManager sessionManager = SessionManager();
 
   void _login(BuildContext context) async {
     String username = usernameController.text;
     String password = passwordController.text;
     List<Map<String, dynamic>> user = await dbHelper.getUserByUsername(username);
     if (user.isNotEmpty && user[0]['password'] == dbHelper.hashPassword(password)) {
+      await _saveSession(username); // Perbarui untuk menunggu penyimpanan sesi selesai
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => StockScreen()),
+        MaterialPageRoute(builder: (context) => StockScreen(api: widget.api)),
       );
     } else {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Login Failed'),
-            content: Text('Invalid username or password. Please try again.'),
+            title: Text('Login Gagal'),
+            content: Text('Username atau Password Salah'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -47,6 +51,12 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
     }
+  }
+
+  Future<void> _saveSession(String username) async { // Ubah menjadi Future<void>
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+    await prefs.setBool('isLoggedIn', true);
   }
 
   void _goToRegisterPage() {

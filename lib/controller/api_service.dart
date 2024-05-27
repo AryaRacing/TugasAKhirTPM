@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'stock_model.dart';
+import '../stock_model.dart';
 
 class ApiService {
-  final String apiKey = 'MNLEZYX2W5AKKI2F'; // Ganti dengan API key Anda
+  final String apiKey = 'MNLEZYX2W5AKKI2F';
 
   Future<List<Stock>> searchStocks(String query) async {
     final response = await http.get(Uri.parse(

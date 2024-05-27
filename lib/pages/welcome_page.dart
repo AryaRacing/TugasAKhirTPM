@@ -1,8 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:visualisasiSaham/api_service.dart';
+import 'package:visualisasiSaham/controller/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'pages/login_page.dart';  // Impor halaman LoginPage
+import 'login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   final ApiService api;
@@ -25,7 +25,7 @@ class _WelcomePageState extends State<WelcomePage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => LoginPage(api: widget.api), // Sediakan objek AlphaVantageApi saat membuat instansi LoginPage
+        builder: (context) => LoginPage(api: widget.api),
       ),
     );
   }

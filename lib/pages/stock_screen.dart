@@ -1,19 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'stock_provider.dart';
-import 'stock_chart_screen.dart'; // Import StockChartScreen
+import '../controller/stock_provider.dart';
+import 'stock_chart_screen.dart';
+import '../controller/session_manager.dart';
+import 'login_page.dart';
+import '../controller/api_service.dart'; 
+import 'favorite_page.dart';
 
 class StockScreen extends StatefulWidget {
+  final ApiService api;
+
+  StockScreen({required this.api});
+
   @override
   _StockScreenState createState() => _StockScreenState();
 }
 
 class _StockScreenState extends State<StockScreen> {
   final TextEditingController _controller = TextEditingController();
+  final SessionManager sessionManager = SessionManager();
 
   void _searchStocks() {
     final provider = Provider.of<StockProvider>(context, listen: false);
     provider.searchStocks(_controller.text);
+  }
+
+  void _toggleFavorite(String symbol) {
+    final provider = Provider.of<StockProvider>(context, listen: false);
+    provider.toggleFavorite(symbol);
+  }
+
+  void _logout() async {
+    await sessionManager.clearSession(); // Hapus informasi sesi saat logout
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage(api: widget.api)),
+    );
   }
 
   @override
@@ -31,6 +53,15 @@ class _StockScreenState extends State<StockScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            Text(
+              'Visualisasi Saham Yang Anda Cari, dan Masukan Saham Favorit Anda Untuk Memantau Market',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            SizedBox(height: 20),
             TextField(
               controller: _controller,
               style: TextStyle(color: Colors.white),
@@ -78,6 +109,13 @@ class _StockScreenState extends State<StockScreen> {
                             stock.symbol,
                             style: TextStyle(color: Colors.white),
                           ),
+                          trailing: IconButton(
+                            icon: Icon(
+                              provider.favoriteStocks.contains(stock) ? Icons.favorite : Icons.favorite_border,
+                              color: Colors.redAccent,
+                            ),
+                            onPressed: () => _toggleFavorite(stock.symbol),
+                          ),
                           onTap: () {
                             Navigator.push(
                               context,
@@ -91,6 +129,40 @@ class _StockScreenState extends State<StockScreen> {
                     ),
                   );
                 }
+              },
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: _logout,
+            backgroundColor: Colors.redAccent,
+            child: Icon(Icons.logout, color: Colors.white),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.blueAccent,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: Icon(Icons.home, color: Colors.white),
+              onPressed: () {
+                // Navigate to home or any other screen
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.favorite, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FavoritePage()), // Go to FavoritePage
+                );
               },
             ),
           ],

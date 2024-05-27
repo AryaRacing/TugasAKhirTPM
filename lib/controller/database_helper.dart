@@ -31,7 +31,7 @@ class DatabaseHelper {
 
   Future<void> insertUser(Map<String, dynamic> user) async {
     final db = await database;
-    user['password'] = hashPassword(user['password']); // Hash password before storing
+    user['password'] = hashPassword(user['password']);
     await db.insert('users', user, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../database_helper.dart';
+import '../controller/database_helper.dart';
 
 class ShowRegisteredUsersPage extends StatefulWidget {
   @override
@@ -53,7 +53,6 @@ class _ShowRegisteredUsersPageState extends State<ShowRegisteredUsersPage> {
       },
     );
 
-    // If the dialog returns null, we consider it as false (i.e., the user did not confirm the deletion)
     return result ?? false;
   }
 

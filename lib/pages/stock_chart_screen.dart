@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'stock_provider.dart'; // Import provider and ApiService
+import '../controller/stock_provider.dart'; // Import provider and ApiService
 
 class StockChartScreen extends StatelessWidget {
   final String symbol;
