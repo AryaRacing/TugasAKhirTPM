@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'pages/welcome_page.dart'; // Import WelcomePage
-import 'controller/stock_provider.dart'; // Import the StockProvider
-import 'controller/api_service.dart'; // Import ApiService
+import 'pages/welcome_page.dart';
+import 'controller/stock_provider.dart';
+import 'controller/api_service.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +11,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Buat instance ApiService
     final ApiService apiService = ApiService();
 
     return ChangeNotifierProvider(
